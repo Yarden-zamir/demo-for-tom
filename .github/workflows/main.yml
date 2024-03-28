@@ -18,7 +18,7 @@ jobs:
               run: docker build . -t tom && docker run -d -p 8000:8000 tom:latest
 
             - name: login to ghcr
-              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+              run: echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
 
             - name: tag
               run: docker tag tom:latest ghcr.io/${{ steps.repo_namer.outputs.REPO_NAME }}:latest
@@ -32,7 +32,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4.1.1
             - name: login to ghcr
-              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+              run: echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
 
             - name: pull image
               run: docker pull ghcr.io/${{ needs.build.outputs.REPO_NAME }}:latest
