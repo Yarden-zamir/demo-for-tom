@@ -9,7 +9,7 @@ jobs:
         steps:
             - name: make repo name lowercase
               id: repo_namer
-              run: echo "REPO_NAME=${{ github.repository }} | tr '[:upper:]' '[:lower:]'" > $GITHUB_OUTPUT
+              run: echo "REPO_NAME="$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"" > $GITHUB_OUTPUT
             
             - name: Checkout
               uses: actions/checkout@v4.1.1
