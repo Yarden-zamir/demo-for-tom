@@ -1,10 +1,10 @@
 on:
     - workflow_dispatch
-
+name: Deploy to prod
 jobs:
     deploy_to_prod:
         runs-on: ubuntu-latest
-        environment: stage
+        environment: prod
         steps:
             - name: fake deploy
               run: sleep 5
