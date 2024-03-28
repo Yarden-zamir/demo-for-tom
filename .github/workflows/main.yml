@@ -57,4 +57,4 @@ jobs:
         environment: stage
         steps:
             - name: fake deploy
-              run: sleep 10
+              run: sleep 5
