@@ -1,0 +1,15 @@
+on:
+    - workflow_dispatch
+
+jobs:
+    deploy_to_prod:
+        runs-on: ubuntu-latest
+        environment: stage
+        steps:
+            - name: login to ghcr
+              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+
+            - name: pull image
+              run: docker pull ghcr.io/${{ github.repository }}:latest
+            - name: fake deploy
+              run: sleep 10

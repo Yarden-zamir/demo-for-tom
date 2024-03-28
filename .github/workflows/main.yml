@@ -2,7 +2,7 @@ on:
     - push
 
 jobs:
-    test:
+    build:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -11,12 +11,45 @@ jobs:
             - name: build and run server
               run: docker build . -t tom && docker run -d -p 8000:8000 tom:latest
 
+            - name: login to ghcr
+              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+
+            - name: tag
+              run: docker tag tom:latest ghcr.io/${{ github.repository }}:latest
+
+            - name: push to ghcr
+              run: docker push ghcr.io/${{ github.repository }}:latest
+    test:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4.1.1
+
+            - name: login to ghcr
+              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+
+            - name: pull image
+              run: docker pull ghcr.io/${{ github.repository }}:latest
+
+            - name: run service
+              run: docker run -d -p 8000:8000 ghcr.io/${{ github.repository }}:latest
+
             - name: install test requirements
               run: pip install -r test.requirements.txt
               
             - name: Run tests
               run: python test.py
-    # deploy_to_stage:
-    #     environment: stage
-    #     steps:
-    #         - run: ls
+    unit-tests:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Checkout
+            uses: actions/checkout@v4.1.1
+          - run: echo doing lots of tests
+    deploy_to_stage:
+        needs: test
+        runs-on: ubuntu-latest
+        environment: stage
+        steps:
+            - name: fake deploy
+              run: sleep 10
